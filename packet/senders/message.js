@@ -5,7 +5,7 @@ var Encoder = require('../encoder');
 
 module.exports.name = 'message';
 
-module.exports.send = function (session, id) {
+module.exports.send = function (session, id, message) {
     return function(message) {
         var packet = new Encoder(id, message.length);
 

@@ -10,6 +10,9 @@ function Session(server, socket) {
     this.socket = socket;
 
     this.updateIdentifier();
+    var fmt = this.socket._peername.family == "IPv6" ? "[%s]" : "%s";
+    console.log("Creating new session with ID '%s': " + fmt + ":%s", 
+      this.identifier, socket._peername.address, socket._peername.port);
     this.socket.setTimeout(60000);
 
     // Apply all of the packet senders.
@@ -20,7 +23,19 @@ function Session(server, socket) {
 
 // Sends a raw buffer to the client.
 Session.prototype.write = function (buffer, done) {
-    this.socket.write(buffer, done);
+    try {
+        if (this.socket.writable)
+            this.socket.write(buffer, done);
+        else {
+            console.log("Terminating client with ID '%s'", this.identifier);
+            this.server.removeSession(this.identifier);
+        }
+    }
+    catch (e) {
+        console.log("Error writing message to session with ID '%s'", 
+          this.identifier);
+        console.log(e)
+    }
 };
 
 // Remove the session from the list within the server instance and destroy the

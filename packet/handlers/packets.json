@@ -5,6 +5,6 @@
     "login": 0,
     "logout": 102,
     "ping": 67,
-    "session": "32",
+    "session": 32,
     "walk": 187
 }

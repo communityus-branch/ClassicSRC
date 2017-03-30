@@ -5,9 +5,14 @@ var events = require('events'),
     World = require('./model/world'),
     Session = require('./session');
 
-function Server(port) {
-    // The port number to listen for connections on.
-    this.port = port || 43594;
+
+function Server(port, host) {
+    console.log("Instantiating Server object...");
+
+    this.options = {
+        "port": port || 43594,
+        "host": host || "localhost"
+    }
 
     // The world where all of the entities are held.
     this.world = new World();
@@ -19,23 +24,33 @@ function Server(port) {
 
 util.inherits(Server, events.EventEmitter);
 
+
 // Remove a session from the map.
 Server.prototype.removeSession = function (identifier) {
+    console.log("Removing session with ID '%s'", identifier);
+    this.world.removePlayer(this.sessions[identifier].player)
     delete this.sessions[identifier];
 };
 
 // Start accepting requests on the specified port and create new session
 // objects associated with connection sockets.
 Server.prototype.listen = function (done) {
+    console.log("Attempting to open socket...");
     var that = this;
 
     this.server = net.createServer(function (socket) {
         var session = new Session(that, socket);
 
         that.sessions[session.identifier] = session;
+    }).on('error', (e) => {
+           console.log('error here');
+           done(e);
     });
 
-    this.server.listen(this.port, done);
+    console.log("Attempting to listen on socket...");
+
+   this.server.listen(this.options, done);
+
 };
 
 Server.prototype.start = function (done) {
@@ -46,7 +61,10 @@ Server.prototype.start = function (done) {
             return done(err);
         }
 
-        console.log('Server listening on port %d.', that.port);
+        var fmt = net.isIPv6(that.options.host) ? "[%s]" : "%s";
+        console.log('Server listening on ' + fmt + ':%d.', 
+          that.options.host, that.options.port);
+
         done();
     });
 };

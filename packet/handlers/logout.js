@@ -8,7 +8,7 @@ module.exports.handle = function (session, payload, done) {
 
     // TODO check if they're busy or in combat etc.
 
-    console.log('logging out');
+    console.log("Logging out player session with ID '%s'", session.identifier);
 
     player.logout();
     done(null);

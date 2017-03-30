@@ -47,6 +47,8 @@ util.inherits(World, events.EventEmitter);
 
 World.prototype.addPlayer = function (player) {
     addEntity(this.players, player);
+    console.log('Trying to add player %s with ID %s', player.index,
+      player.session.identifier);
 
     // Emit that a player has been added to the world so we can notify other
     // players and adjust updates accordingly.
@@ -54,7 +56,9 @@ World.prototype.addPlayer = function (player) {
 };
 
 World.prototype.removePlayer = function (player) {
-    console.log('trying to remove player', player.index);
+    if (!player) return -1;
+    console.log('Trying to remove player %s with ID %s', player.index,
+      player.session.identifier);
 
     removeEntity(this.players, player);
 

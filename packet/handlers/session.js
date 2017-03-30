@@ -11,6 +11,7 @@ function secureInt() {
 }
 
 module.exports.handle = function (session, payload, done) {
+    console.log("handle called");
     var packet = new Buffer(8);
 
     session.keys = [secureInt(), secureInt()];

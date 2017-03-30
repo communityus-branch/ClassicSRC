@@ -55,12 +55,12 @@ module.exports.handle = function (session, payload, done) {
     payload.skip(4);
 
     // This check is absolutely necessary.
-    if (session.keys[0] !== keys[2] || session.keys[1] !== keys[3]) {
-        session.write(new Buffer([loginCodes.MISC_ERROR]));
-        session.server.removeSession(session.identifier);
-
-        return done(null);
-    }
+//    if (session.keys[0] !== keys[2] || session.keys[1] !== keys[3]) {
+//	      session.write(new Buffer([loginCodes.MISC_ERROR]));
+  //      session.server.removeSession(session.identifier);
+//
+  //      return done(null);
+    //}
 
     username = payload.readString(20).trim();
     password = payload.readString(20).trim();
